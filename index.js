@@ -45,12 +45,14 @@ module.exports.define = function() {
  * @return {void}
  */
 module.exports.apply = function(Constructor, mixin) {
+	var key, value, _propList, proto = Constructor.prototype;
+
 	var overrideMethod = function(method_name) {
-		var method = Constructor.prototype[method_name];
+		var method = proto[method_name];
 		if (method && method.overridden) return method;
 
-		var original = Constructor.prototype[method_name];
-		method = Constructor.prototype[method_name] = function() {
+		var original = proto[method_name];
+		method = proto[method_name] = function() {
 			var matches = 0, match;
 			for (var i = 0, n = candidates.length; i < n; i++) {
 				if (!candidates[i][0] || candidates[i][0].apply(this, [])) {
@@ -65,7 +67,7 @@ module.exports.apply = function(Constructor, mixin) {
 		method.overridden = true;
 
 		if (original) {
-			method.candidates.unshift([null, original]);
+			candidates.unshift([null, original]);
 		}
 		return method;
 	};
@@ -73,14 +75,35 @@ module.exports.apply = function(Constructor, mixin) {
 		overrideMethod(method_name).candidates.unshift([mixin.test, fn]);
 	};
 
-	var key, value;
-	for (var key in mixin.props) {
+	// add special _mixinParent function (before any mixins are applied)
+	if (!proto._mixinParent) {
+		_propList = [];
+		for (key in proto) {
+			if (proto.hasOwnProperty(key)) {
+				_propList.push([key, proto[key]]);
+			}
+		}
+
+		proto._mixinParent = function() {
+			var self = this;
+			if (!self._mixinParentProps) {
+				var _mixinParentProps = self._mixinParentProps = {};
+				for (var i = 0, n = _propList.length; i < n; i++) {
+					_mixinParentProps[_propList[i][0]] = typeof _propList[i][1] === 'function' ? bind(self, _propList[i][1]) : _propList[i][1];
+				}
+			}
+			return self._mixinParentProps;
+		};
+	}
+
+	// add all methods / properties
+	for (key in mixin.props) {
 		if (mixin.props.hasOwnProperty(key)) {
 			value = mixin.props[key];
 			if (typeof value === 'function') {
 				addMethod(key, value);
 			} else if (!mixin.test) {
-				Constructor.prototype[key] = value;
+				proto[key] = value;
 			}
 		}
 	}
@@ -121,4 +144,10 @@ var objectMatcher = function(props) {
 		}
 		return true;
 	}
+};
+
+var bind = function(self, fn) {
+	return function() {
+		return fn.apply(self, arguments);
+	};
 };

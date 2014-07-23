@@ -14,7 +14,7 @@ $ npm install conditional-mixin --save
 var mixin = require('conditional-mixin');
 
 var Animal = function(type) { this.type = type; };
-MyClass.prototype.hello = function() { console.log('I am an animal.') };
+Animal.prototype.hello = function() { console.log('I am an animal.') };
 
 mixin.apply(Animal, require('./cat.js'));
 mixin.apply(Animal, require('./dog.js'));
@@ -44,9 +44,25 @@ console.log((new Animal(2)).hello()); // "I am a dog."
 
 When defining a mixin the first argument repesents the condition that should be met in order to use the mixin methods. It can be any of these styles:
 
-- **Callback** (function) – Return `true` or `false` from a function to indiciate if the mixin is to be applied. The `this` context will be the same as the candidate method.
-- **Property List** (object) – Each property will be checked against the instance for strict equality.
+- **Callback** (`function`) – Return `true` or `false` from a function to indiciate if the mixin is to be applied. The `this` context will be the same as the candidate method.
+- **Property List** (`object`) – Each property will be checked against the instance for strict equality.
 - **Omitted** – Operates like a regular mixin. All properties / functions are applied.
+
+### Additional Notes
+
+#### Accessing Original Methods / Properties
+
+From any of the mixin methods, there is a special `_mixinParent()` function that returns all properties before any mixins were applied. Any functions will be bound to the current instance to prevent the need for manual binding. 
+
+```js
+module.exports = mixin.define({type: 2}, {
+    hello: function() {
+        console.log('I am a dog.');
+        console.log('More generically, I am a:');
+        console.log(this._mixinParent().hello());
+    }
+});
+```
 
 ### Test
 

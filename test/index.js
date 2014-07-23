@@ -103,6 +103,24 @@ describe('mixin', function() {
 		var a = new A();
 		assert.equal(a.hello('someone'), 'hello someone');
 	});
+	it('should add _mixinParent() that returns original properties (with functions bound)', function() {
+		var A = function() { };
+		A.prototype.x = 1;
+		A.prototype.realSelf = function() { return this; };
+		A.prototype.self = function() {
+			return this;
+		};
+		var B = mixin.define({
+			x: 2,
+			self: function() { return false; }
+		});
+		mixin.apply(A, B);
+
+		var a = new A();
+		assert.property(a, '_mixinParent');
+		assert.equal(a._mixinParent().self(), a.realSelf());
+		assert.equal(a._mixinParent().x, 1);
+	});
 });
 
 describe('mixin candidate test', function() {
