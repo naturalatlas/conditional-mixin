@@ -79,9 +79,7 @@ module.exports.apply = function(Constructor, mixin) {
 	if (!proto._mixinParent) {
 		_propList = [];
 		for (key in proto) {
-			if (proto.hasOwnProperty(key)) {
-				_propList.push([key, proto[key]]);
-			}
+			_propList.push([key, proto[key]]);
 		}
 
 		proto._mixinParent = function() {

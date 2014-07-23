@@ -1,3 +1,4 @@
+var util = require('util');
 var assert = require('chai').assert;
 var mixin = require('../index.js');
 
@@ -104,7 +105,11 @@ describe('mixin', function() {
 		assert.equal(a.hello('someone'), 'hello someone');
 	});
 	it('should add _mixinParent() that returns original properties (with functions bound)', function() {
+		var Base = function() {};
+		Base.prototype.inheritedSelf = function() { return this; };
+
 		var A = function() { };
+		util.inherits(A, Base);
 		A.prototype.x = 1;
 		A.prototype.realSelf = function() { return this; };
 		A.prototype.self = function() {
@@ -118,6 +123,7 @@ describe('mixin', function() {
 
 		var a = new A();
 		assert.property(a, '_mixinParent');
+		assert.equal(a._mixinParent().inheritedSelf(), a.realSelf());
 		assert.equal(a._mixinParent().self(), a.realSelf());
 		assert.equal(a._mixinParent().x, 1);
 	});
