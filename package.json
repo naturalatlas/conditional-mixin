@@ -1,6 +1,6 @@
 {
   "name": "conditional-mixin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Mixin methods that are conditionally resolved at call-time.",
   "main": "index.js",
   "directories": {
