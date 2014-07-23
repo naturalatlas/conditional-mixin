@@ -1,0 +1,31 @@
+{
+  "name": "conditional-mixin",
+  "version": "0.0.1",
+  "description": "Mixin methods that are conditionally resolved at call-time.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naturalatlas/conditional-mixin"
+  },
+  "keywords": [
+    "mixin",
+    "class",
+    "function"
+  ],
+  "author": "Brian Reavis <brian@naturalatlas.com>",
+  "license": "Apache License v2.0",
+  "bugs": {
+    "url": "https://github.com/naturalatlas/conditional-mixin/issues"
+  },
+  "homepage": "https://github.com/naturalatlas/conditional-mixin",
+  "devDependencies": {
+    "mocha": "^1.20.1",
+    "chai": "^1.9.1"
+  }
+}
