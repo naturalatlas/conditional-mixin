@@ -1,4 +1,6 @@
 # conditional-mixin
+[![NPM version](https://badge.fury.io/js/conditional-mixin.png)](http://badge.fury.io/js/conditional-mixin)
+[![Build Status](https://travis-ci.org/naturalatlas/conditional-mixin.png?branch=master)](https://travis-ci.org/naturalatlas/conditional-mixin)
 
 Extend objects using the [mixin pattern](http://en.wikipedia.org/wiki/Mixin) with methods that are chosen when called (using a condition defined with each mixin). This is useful for loose-schema models that might have different validation rules or other functionality that depends on its state (like a type id).
 
@@ -43,7 +45,7 @@ console.log((new Animal(2)).hello()); // "I am a dog."
 When defining a mixin the first argument repesents the condition that should be met in order to use the mixin methods. It can be any of these styles:
 
 - **Callback** (function) – Return `true` or `false` from a function to indiciate if the mixin is to be applied. The `this` context will be the same as the candidate method.
-- **Property List** (object) – Each property will be checked against the instance of strict equality.
+- **Property List** (object) – Each property will be checked against the instance for strict equality.
 - **Omitted** – Operates like a regular mixin. All properties / functions are applied.
 
 ### Test
