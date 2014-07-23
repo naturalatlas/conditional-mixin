@@ -40,7 +40,7 @@ console.log((new Animal(2)).hello()); // "I am a dog."
 
 ### Test Types
 
-When defining a mixin the first argument repesents the condition that should be met in order to use the mixin methods. It can be one of two styles:
+When defining a mixin the first argument repesents the condition that should be met in order to use the mixin methods. It can be any of these styles:
 
 - **Callback** (function) – Return `true` or `false` from a function to indiciate if the mixin is to be applied. The `this` context will be the same as the candidate method.
 - **Property List** (object) – Each property will be checked against the instance of strict equality.
