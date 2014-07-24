@@ -1,3 +1,5 @@
+var selectn = require('selectn');
+
 /**
  * Creates a mixin that can be applied to a constructor via mixin.apply.
  *
@@ -107,6 +109,12 @@ module.exports.apply = function(Constructor, mixin) {
 	}
 };
 
+var keyMatcher = function(key, value) {
+	if (key.indexOf('.') === -1) return null;
+	var selector = selectn(key);
+	return function() { return selector(this) === value; };
+};
+
 /**
  * Tests `this` for matching properties.
  *
@@ -114,19 +122,32 @@ module.exports.apply = function(Constructor, mixin) {
  * @return {boolean}
  */
 var objectMatcher = function(props) {
-	var key, value;
+	var key, value, matcher;
 	var keys = [];
 	var values = [];
+	var matchers = [];
 	for (key in props) {
 		if (props.hasOwnProperty(key)) {
-			keys.push(key);
-			values.push(props[key]);
+			matcher = keyMatcher(key, props[key]);
+			if (matcher) {
+				matchers.push(matcher);
+			} else {
+				keys.push(key);
+				values.push(props[key]);
+			}
 		}
 	}
-	if (!values.length) {
+
+	var matcher_count = matchers.length;
+	var simple_count = values.length;
+
+	if (!matcher_count && !simple_count) {
 		return function() { return false; };
 	}
-	if (values.length === 1) {
+	if (!simple_count && matcher_count === 1) {
+		return matchers[0];
+	}
+	if (simple_count === 1 && !matcher_count) {
 		key = keys[0];
 		value = values[0];
 		return function() {
@@ -135,13 +156,21 @@ var objectMatcher = function(props) {
 	}
 
 	return function() {
-		for (var i = 0, n = keys.length; i < n; i++) {
+		var i, n;
+		for (i = 0, n = simple_count; i < n; i++) {
 			if (this[keys[i]] !== values[i]) {
 				return false;
 			}
 		}
+		if (matcher_count) {
+			for (i = 0, n = matcher_count; i < n; i++) {
+				if (matchers[i].apply(this, []) === false) {
+					return false;
+				}
+			}
+		}
 		return true;
-	}
+	};
 };
 
 var bind = function(self, fn) {

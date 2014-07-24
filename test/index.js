@@ -163,7 +163,7 @@ describe('mixin candidate test', function() {
 		assert.equal((new A(1)).name(), 'B');
 		assert.equal((new A(2)).name(), 'C');
 	});
-	it('should support object of properties', function() {
+	it('should support object with properties', function() {
 		var A = function(x, y) {
 			this.x = x;
 			this.y = y;
@@ -182,5 +182,31 @@ describe('mixin candidate test', function() {
 		assert.equal((new A(1,2)).name(), 'B');
 		assert.equal((new A(2,2)).name(), 'A');
 		assert.equal((new A(2,3)).name(), 'C');
+	});
+	it('should support object with nested properties', function() {
+		var A = function(x, y, z) {
+			this.pt = {x: x, y: y};
+			this.z = z;
+		};
+		A.prototype.name = function() { return 'A'; };
+		var B = mixin.define({'pt.x': 1}, {
+			name: function() { return 'B'; }
+		});
+		var C = mixin.define({'pt.x': 2, 'pt.y': 3}, {
+			name: function() { return 'C'; }
+		});
+		var D = mixin.define({'z': 5, 'pt.x': 2, 'pt.y': 3}, {
+			name: function() { return 'D'; }
+		});
+
+		mixin.apply(A, B);
+		mixin.apply(A, C);
+		mixin.apply(A, D);
+
+		assert.equal((new A(1,2)).name(), 'B');
+		assert.equal((new A(2,2)).name(), 'A');
+		assert.equal((new A(2,3)).name(), 'C');
+		assert.equal((new A(2,3,5)).name(), 'D');
+		assert.equal((new A(2,3,6)).name(), 'C');
 	});
 });
