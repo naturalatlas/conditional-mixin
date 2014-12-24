@@ -1,7 +1,7 @@
 # conditional-mixin
-[![NPM version](https://badge.fury.io/js/conditional-mixin.png)](http://badge.fury.io/js/conditional-mixin)
-[![Build Status](https://travis-ci.org/naturalatlas/conditional-mixin.png?branch=master)](https://travis-ci.org/naturalatlas/conditional-mixin)
-[![Coverage Status](https://coveralls.io/repos/naturalatlas/conditional-mixin/badge.png)](https://coveralls.io/r/naturalatlas/conditional-mixin)
+[![NPM version](http://img.shields.io/npm/v/conditional-mixin.svg?style=flat)](https://www.npmjs.org/package/conditional-mixin)
+[![Build Status](http://img.shields.io/travis/naturalatlas/conditional-mixin/master.svg?style=flat)](https://travis-ci.org/naturalatlas/conditional-mixin)
+[![Coverage Status](http://img.shields.io/coveralls/naturalatlas/conditional-mixin/master.svg?style=flat)](https://coveralls.io/r/naturalatlas/conditional-mixin)
 
 Extend objects using the [mixin pattern](http://en.wikipedia.org/wiki/Mixin) with methods that are chosen when called (using a condition defined with each mixin). This is useful for loose-schema models that might have different validation rules or other functionality that depends on its state (like a type id).
 
